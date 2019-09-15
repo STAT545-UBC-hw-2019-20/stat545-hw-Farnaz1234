@@ -1,10 +1,97 @@
 ---
 title: "hw03"
 author: "Farnaz Sahragard"
-date: "۱۳۹۸/۶/۲۴"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+```{r}
+library(gapminder) 
+library(rmarkdown)
+library(tibble)
+library(DT)
+library(tidyverse)
+library(tsibble)
+library(scales)
+library(dplyr)
+library(ggplot2)
+```
+
+# __Task option 2__: Get The maximum and minimum of GDP per capita for all continents.
+## The table and plot below show the maximum and minimum of gdpPercap for all continents.
+
+```{r}
+gapminder %>% 
+group_by(continent) %>% 
+summarize(maxgdp = max(gdpPercap),mingdp= min(gdpPercap))
+```
+```{r}
+gapminder %>%
+  ggplot(aes(continent, gdpPercap)) +
+  geom_boxplot(size = 0.5) +
+  scale_y_log10(labels = scales::dollar_format()) +
+  labs(title = "*GDP per Capita per Continent*", x = "Continent", y = "GDP per Capita")
+  
+  
+```
+
+# __Task option 3__: Look at the spread of GDP per capita within the continents.
+## The table and plot below show the spread (range, quartiles(Q1,Q2,Q3), interquartile range (IQR), variance (VAR), standard deviation (SD)) of gdpPercap for all continents.
+
+```{r}
+gapminder %>%
+  group_by(continent) %>%
+  summarize(Range = paste(min(gdpPercap), max(gdpPercap), sep = "~"),
+                     Q1 = quantile(gdpPercap, 0.25),
+                     Q2 = quantile(gdpPercap, 0.5),
+                     Q3 = quantile(gdpPercap, 0.75),
+                     IQR = IQR(gdpPercap),
+                     VAR = var(gdpPercap),
+                     SD = sd(gdpPercap)) %>%
+  rename(Continent = continent)
+      
+  
+```
+```{r}
+gapminder %>%
+  ggplot(aes(gdpPercap, color = continent)) +
+  geom_line(stat = "density", size = 0.5) +
+  scale_x_log10("GDP per capita", labels = scales::comma_format())+
+  scale_y_continuous("Density")+
+  theme_bw()+
+  scale_color_brewer(palette="Set1", name = "Continent")
+```
+
+# __Task option 5__: How is life expectancy changing over time on different continents?
+## The table below shows that the minimum, mean, and maximum values of life expectancy has changed over time. The plot shows how the mean of life expectancy changes over time. We can see that the growth speed was not the same for different countries in different times. Life expectancy has increased for most countries over time, but for Africa a drop in life expectancy is seen beetween 1990-2000.
+
+
+```{r}
+gapminder %>% 
+  group_by(continent,year) %>% 
+  summarize(Min = min(lifeExp),
+            Mean = mean(lifeExp),
+            Max = max(lifeExp)) %>% 
+  rename(Continent = continent, Year = year)
+```
+
+```{r}
+gapminder %>% 
+  group_by(continent, year) %>% 
+  summarize(min = min(lifeExp),
+            mean = mean(lifeExp),
+            max = max(lifeExp)) %>% 
+  ggplot(aes(year, mean, colour = continent)) +
+  geom_line(alpha = 0.5)+
+  geom_point()+
+  scale_x_continuous("Year")+
+  scale_y_continuous("Mean of life expectancy")+
+  theme_bw()+
+  scale_color_brewer(palette="Paired", name = "Continent")
+```
+
+
+
