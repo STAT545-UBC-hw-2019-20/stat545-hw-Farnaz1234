@@ -27,4 +27,4 @@ My name is Farnaz Sahragard. I am a graduate student in Pathology and Laboratory
  
  ![beautiful place](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJKVAJLmjkg-O5M1lmJgzjpz-us7WbIpFEgWrSmKjXElh2_W9V)
  
- If you are interested to see the picture in a better resolution, you can find it at this [link](https://www.worldatlas.com/articles/10-of-the-most-beautiful-countries-in-the-world.html)
+ If you are interested to see other beautiful pictures in a better resolution, you can find them at this [link](https://www.worldatlas.com/articles/10-of-the-most-beautiful-countries-in-the-world.html)
