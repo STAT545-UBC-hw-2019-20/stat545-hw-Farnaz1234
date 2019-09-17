@@ -1,4 +1,4 @@
-# Farnaz's homework repository
+# Farnaz's homework repository :books:
 
 This is my __repository__ for course STAT 545 and it's like a folder for my projects. It contains all of my project's files and stores each file's revision history. Below is our assignments and their due dates.
 
