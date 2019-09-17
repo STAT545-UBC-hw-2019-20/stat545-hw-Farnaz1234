@@ -17,8 +17,12 @@ Assignment number | Due date
 My name is Farnaz Sahragard. I am a graduate student in Pathology and Laboratory Medicine. I am originally from Iran, but I had the chance to finish my elementary school in Vancouver. My hobbies are listed below:
 
 * Swimming
-* Hiking
 * Traveling
 * Reading
   * Science fiction
   * Magazines
+ * hiking
+ 
+ This is one of the places I would love to go for hiking.
+ 
+ ![beautiful place](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJKVAJLmjkg-O5M1lmJgzjpz-us7WbIpFEgWrSmKjXElh2_W9V)
