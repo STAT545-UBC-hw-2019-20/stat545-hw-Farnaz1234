@@ -1,0 +1,12 @@
+---
+title: "hw04"
+author: "Farnaz Sahragard"
+date: "08/10/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+starting hw04
