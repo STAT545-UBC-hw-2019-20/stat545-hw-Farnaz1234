@@ -1,7 +1,6 @@
 ---
 title: "hw04"
 author: "Farnaz Sahragard"
-date: "08/10/2019"
 output: html_document
 ---
 
@@ -9,4 +8,114 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-starting hw04
+```{r load, warning = FALSE, message = FALSE}
+library(tidyverse)
+library(tidyr)
+library(gapminder)
+library(DT)
+guest <- read_csv("https://raw.githubusercontent.com/STAT545-UBC/Classroom/master/data/wedding/attend.csv")
+email <- read_csv("https://raw.githubusercontent.com/STAT545-UBC/Classroom/master/data/wedding/emails.csv")
+```
+
+## __Exercise 1__: Univariate Data Reshaping - Option 1
+### 1.1 Make a tibble with one row per year, and columns for life expectancy for two or more countries.
+
+```{r}
+lifeExp_comp <- gapminder %>% 
+  select(year, country, lifeExp) %>%
+  filter(country == "Central African Republic" | country == "Japan")
+lifeExp_comp_wider <- lifeExp_comp %>%  
+                      pivot_wider(id_col = year,  # Pivot to create new columns for each country
+                      names_from = country,
+                      values_from = lifeExp) %>% 
+                      rename(lifeExp_CAR = "Central African Republic", lifeExp_Japan = "Japan") 
+                                    
+DT::datatable(lifeExp_comp_wider, rownames = FALSE)
+```
+
+This table shows life expectancies of __Central African Republic (CAR)__ and __Japan__ in different years. According to the table, life expectancy of Japan was approximately *twice* as high as CAR.
+
+### 1.2 Take advantage of this new data shape to scatterplot life expectancy for one country against that of another.
+
+```{r}
+lifeExp_comp_wider %>%
+  ggplot(aes(lifeExp_CAR, lifeExp_Japan)) +  
+  geom_point()+
+  labs(x = "Life expectancy of Central African Republic",
+       y = "Life expectancy of Japan") +
+  theme_light() 
+```
+
+The scatterplot shows the life expectancy of __Japan__ vs. __CAR__.
+
+### 1.3 Re-lengthen the data.
+
+```{r}
+lifeExp_comp_wider %>% # Re-lengthen the wider data to the original one
+   rename("Central African Republic" = "lifeExp_CAR", "Japan" = "lifeExp_Japan") %>% # Rename to their original names
+   pivot_longer(cols = c(-year),
+               names_to = "country",
+               values_to = "lifeExp") %>% 
+   arrange(country) %>% # Arrange rows in the same order as before
+   DT::datatable()
+```
+
+## __Exercise 2__: Multivariate Data Reshaping - Option 1
+### 2.1 Make a tibble with one row per year, and columns for life expectancy and GDP per capita for two or more countries.
+
+```{r}
+lifeGDP <- gapminder %>%
+           select(year, country, lifeExp, gdpPercap) %>% 
+           filter(country == "Central African Republic" | country == "Japan")
+lifeGDP_wider <- lifeGDP %>% # Put data in a wider format
+                 pivot_wider(id_cols = year, 
+                 names_from  = country, 
+                 names_sep   = "_", 
+                 values_from = c(lifeExp, gdpPercap) ) %>% 
+                 rename(lifeExp_CAR = "lifeExp_Central African Republic", gdpPercap_CAR = "gdpPercap_Central African Republic") 
+DT::datatable(lifeGDP_wider)
+```
+
+This table shows the life expectancy and GDP per capita of __Central African Republic (CAR)__ and __Japan__ in different years.
+
+### 2.2 Re-lengthen the data.
+
+```{r}
+lifeGDP_wider %>% 
+  rename("lifeExp_Central African Republic" = "lifeExp_CAR", "gdpPercap_Central African Republic" = "gdpPercap_CAR") %>% 
+  # Rename to their original names
+    pivot_longer(cols      = c(-year), 
+               names_to  = c(".value", "country"),
+               names_sep = "_") %>% 
+  arrange(country) # Arrange rows in the same order as before
+  
+```
+
+
+## __Exercise 3__: Table Joins
+### 3.1 Add a column for email address for each guest in the guestlist.
+
+```{r}
+email_separate <- email %>% 
+                  separate_rows(guest, sep = ", ") %>% # Emails separated for each person
+                  rename(name = guest) # Rename for table joining
+guest %>% 
+   left_join(email_separate, by = c("name")) %>% # Add email for each person in dataset
+   DT::datatable(rownames = FALSE)
+```
+
+### 3.2 Show people we have emails for yet are not on the guestlist.
+
+```{r}
+email_separate %>% 
+  anti_join(guest, by = c("name")) %>% 
+  DT::datatable(rownames = FALSE)
+```
+
+### 3.3 Guestlist that includes everyone we have emails for.
+
+```{r}
+guest %>% 
+  full_join(email_separate, by = c("name")) %>% 
+  DT::datatable(rownames = FALSE)
+```
