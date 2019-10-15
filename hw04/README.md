@@ -1,1 +1,1 @@
-https://github.com/STAT545-UBC-hw-2019-20/stat545-hw-Farnaz1234/blob/master/hw04/hw04.html
+https://github.com/STAT545-UBC-hw-2019-20/stat545-hw-Farnaz1234/hw04/hw04.html
